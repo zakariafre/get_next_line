@@ -6,14 +6,14 @@
 /*   By: zahrabar <zahrabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 15:36:30 by zahrabar          #+#    #+#             */
-/*   Updated: 2025/11/09 19:27:13 by zahrabar         ###   ########.fr       */
+/*   Updated: 2025/11/11 14:14:22 by zahrabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# define BUFFER_SIZE 42
+# define BUFFER_SIZE 5
 
 #include <fcntl.h>
 #include <stdlib.h>
