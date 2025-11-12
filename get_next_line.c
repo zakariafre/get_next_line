@@ -68,6 +68,8 @@ char	*after_nl(char *buf)
 		return (NULL);
 	while (buf[i] && buf[i] != '\n')
 		i++;
+	if (buf[i] == '\n')
+		i++;
 	buffer = malloc(ft_strlen(buf) - i + 1);
 	if (!buffer)
 		return (NULL);
