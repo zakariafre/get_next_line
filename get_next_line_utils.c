@@ -6,7 +6,7 @@
 /*   By: zahrabar <zahrabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 18:48:04 by zahrabar          #+#    #+#             */
-/*   Updated: 2025/11/09 19:28:24 by zahrabar         ###   ########.fr       */
+/*   Updated: 2025/11/12 02:09:39 by zahrabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,24 +20,6 @@ size_t	ft_strlen(const char *s)
 	while (s[i])
 		i++;
 	return (i);
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	int		i;
-	char	*str; 
-
-	str = (char *)s;
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == (char)c)
-			return (&str[i]);
-		i++;
-	}
-	if ((char)c == '\0')
-		return (&str[i]);
-	return (NULL);
 }
 
 char	*ft_strdup(const char *s1)

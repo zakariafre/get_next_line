@@ -1,4 +1,5 @@
 #include "get_next_line.h"
+#include <stdio.h>
 
 int main()
 {
@@ -7,9 +8,14 @@ int main()
 	if (fd < 0)
 		return 1;
 
-	char *line = get_next_line(fd);
-
-	printf("first line : %s\n", line);
+	char *line;
+	int i = 1;
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		printf("line %d : %s",i, line);
+		i++;
+		free(line);
+	}
 
 	close(fd);
 	return (0);
