@@ -6,7 +6,7 @@
 /*   By: zahrabar <zahrabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 15:34:16 by zahrabar          #+#    #+#             */
-/*   Updated: 2025/11/12 16:49:43 by zahrabar         ###   ########.fr       */
+/*   Updated: 2025/11/14 15:24:27 by zahrabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,21 +35,19 @@ char	*before_nl(char *buf)
 	char	*new_buf;
 
 	i = 0;
-	if (!buf)
+	if (!buf || !buf[0])
 		return (NULL);
-	while (buf[i] != '\n')
+	while (buf[i] && buf[i] != '\n')
 		i++;
 	if (buf[i] == '\n')
 		i++;
 	new_buf = malloc(i + 1);
 	if (!new_buf)
 		return (NULL);
+	i = 0;
 	j = 0;
 	while (buf[j] && buf[j] != '\n')
-	{
-		new_buf[j] = buf[j];
-		j++;
-	}
+		new_buf[j++] = buf[i++];
 	if (buf[j] == '\n')
 		new_buf[j++] = '\n';
 	new_buf[j] = '\0';
@@ -79,43 +77,52 @@ char	*after_nl(char *buf)
 	return (buffer);
 }
 
-static char	*ex_line(char **left_buf)
+char	*ex_line(char **what_left)
 {
 	char	*line;
+	char	*new_left;
 	char	*tmp;
 
-	line = before_nl(*left_buf);
-	tmp = *left_buf;
-	*left_buf = after_nl(*left_buf);
+	if (!*what_left)
+		return (NULL);
+	if ((*what_left)[0] == '\0')
+		return (flush_leftover(what_left));
+	tmp = *what_left;
+	line = before_nl(tmp);
+	if (!line)
+		return (NULL);
+	new_left = after_nl(tmp);
+	if (!new_left)
+	{
+		free(line);
+		return (NULL);
+	}
+	*what_left = new_left;
 	free (tmp);
 	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	char		*line;
-	int			n;
-	char		buffer[BUFFER_SIZE + 1];
-	static char	*left_buf;
+	char		buf[BUFFER_SIZE + 1];
+	char		*tmp;
+	static char	*what_left;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (left_buf && found_newline(left_buf))
-		return (ex_line(&left_buf));
-	n = 1;
-	while (n > 0)
+	what_left = read_join(what_left, buf, fd);
+	if (!what_left || !what_left[0])
 	{
-		n = read(fd, buffer, BUFFER_SIZE);
-		buffer[n] = '\0';
-		left_buf = ft_strjoin(left_buf, buffer);
-		if (found_newline(left_buf) == 1)
-			return (ex_line(&left_buf));
+		free(what_left);
+		what_left = NULL;
+		return (NULL);
 	}
-	if (left_buf && left_buf[0])
+	tmp = ex_line(&what_left);
+	if (!tmp)
 	{
-		line = left_buf;
-		left_buf = NULL;
-		return (line);
+		free(what_left);
+		what_left = NULL;
+		return (NULL);
 	}
-	return (NULL);
+	return (tmp);
 }
