@@ -6,13 +6,13 @@
 /*   By: zahrabar <zahrabar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 15:34:16 by zahrabar          #+#    #+#             */
-/*   Updated: 2025/11/14 15:24:27 by zahrabar         ###   ########.fr       */
+/*   Updated: 2025/11/15 18:51:03 by zahrabar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	found_newline(char *buffer)
+int	found_nl(char *buffer)
 {
 	int	i;
 
@@ -77,27 +77,27 @@ char	*after_nl(char *buf)
 	return (buffer);
 }
 
-char	*ex_line(char **what_left)
+char	*ex_line(char **saved_buf)
 {
 	char	*line;
-	char	*new_left;
+	char	*new_saved;
 	char	*tmp;
 
-	if (!*what_left)
+	if (!*saved_buf)
 		return (NULL);
-	if ((*what_left)[0] == '\0')
-		return (flush_leftover(what_left));
-	tmp = *what_left;
+	if ((*saved_buf)[0] == '\0')
+		return (flush_leftover(saved_buf));
+	tmp = *saved_buf;
 	line = before_nl(tmp);
 	if (!line)
 		return (NULL);
-	new_left = after_nl(tmp);
-	if (!new_left)
+	new_saved = after_nl(tmp);
+	if (!new_saved)
 	{
 		free(line);
 		return (NULL);
 	}
-	*what_left = new_left;
+	*saved_buf = new_saved;
 	free (tmp);
 	return (line);
 }
@@ -106,22 +106,22 @@ char	*get_next_line(int fd)
 {
 	char		buf[BUFFER_SIZE + 1];
 	char		*tmp;
-	static char	*what_left;
+	static char	*saved_buf;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	what_left = read_join(what_left, buf, fd);
-	if (!what_left || !what_left[0])
+	saved_buf = read_join(saved_buf, buf, fd);
+	if (!saved_buf || !saved_buf[0])
 	{
-		free(what_left);
-		what_left = NULL;
+		free(saved_buf);
+		saved_buf = NULL;
 		return (NULL);
 	}
-	tmp = ex_line(&what_left);
+	tmp = ex_line(&saved_buf);
 	if (!tmp)
 	{
-		free(what_left);
-		what_left = NULL;
+		free(saved_buf);
+		saved_buf = NULL;
 		return (NULL);
 	}
 	return (tmp);

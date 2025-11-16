@@ -72,39 +72,39 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (result);
 }
 
-char	*flush_leftover(char **what_left)
+char	*flush_leftover(char **saved_buf)
 {
 	char	*line;
 
-	line = *what_left;
-	*what_left = NULL;
+	line = *saved_buf;
+	*saved_buf = NULL;
 	return (line);
 }
 
-char	*read_join(char *left_buf, char *buf, int fd)
+char	*read_join(char *saved_buf, char *buf, int fd)
 {
 	char	*tmp;
 	int		n;
 
 	n = 1;
-	while (found_newline(left_buf) == 0 && n > 0)
+	while (found_nl(saved_buf) == 0 && n > 0)
 	{
 		n = read(fd, buf, BUFFER_SIZE);
 		if (n < 0)
 		{
-			free(left_buf);
-			left_buf = NULL;
+			free(saved_buf);
+			saved_buf = NULL;
 			return (NULL);
 		}
 		buf[n] = '\0';
-		tmp = left_buf;
-		left_buf = ft_strjoin(left_buf, buf);
-		if (!left_buf)
+		tmp = saved_buf;
+		saved_buf = ft_strjoin(saved_buf, buf);
+		if (!saved_buf)
 		{
 			free(tmp);
 			return (NULL);
 		}
 		free(tmp);
 	}
-	return (left_buf);
+	return (saved_buf);
 }

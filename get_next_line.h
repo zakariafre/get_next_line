@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 8
 # endif
 
 # include <fcntl.h>
@@ -27,6 +27,6 @@ char	*ft_strdup(const char *s1);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*flush_leftover(char **left_buf);
 char	*read_join(char *left_buf, char *buf, int fd);
-int		found_newline(char *buffer);
+int		found_nl(char *buffer);
 
 #endif
